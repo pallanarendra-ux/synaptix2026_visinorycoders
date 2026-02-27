@@ -20,6 +20,9 @@ function startTest(){
     if(!studentName){ alert('Enter your name'); return; }
     document.getElementById('loginDiv').style.display='none';
     document.getElementById('testDiv').style.display='block';
+    responses = [];
+    answeredQuestions = [];
+    theta = 0.5;
     showNextQuestion();
 }
 
@@ -60,36 +63,64 @@ function showReport(){
     document.getElementById('testDiv').style.display='none';
     document.getElementById('reportDiv').style.display='block';
 
-    // Save attempt to localStorage
-    const attempts = JSON.parse(localStorage.getItem('attempts')||'[]');
-    attempts.push({student:studentName, responses:responses});
-    localStorage.setItem('attempts', JSON.stringify(attempts));
+    // Save current attempt with all previous attempts
+    const allAttempts = JSON.parse(localStorage.getItem('attempts')||'[]');
+    let correctCount = responses.filter(r=>r.correct==='Y').length;
+    let wrongCount = responses.filter(r=>r.correct==='N').length;
+    allAttempts.push({
+        student: studentName,
+        responses: responses,
+        total: responses.length,
+        correct: correctCount,
+        wrong: wrongCount
+    });
+    localStorage.setItem('attempts', JSON.stringify(allAttempts));
 
+    // Show current test report by topic/subtopic
     const grouped = {};
     responses.forEach(r=>{
-        const key=r.question.topic+"|"+r.question.subtopic;
+        const key = r.question.topic+"|"+r.question.subtopic;
         if(!grouped[key]) grouped[key]={topic:r.question.topic,subtopic:r.question.subtopic,total:0,correct:0};
-        grouped[key].total++; if(r.correct==='Y') grouped[key].correct++;
+        grouped[key].total++;
+        if(r.correct==='Y') grouped[key].correct++;
     });
-
-    const tbody=document.querySelector('#reportTable tbody');
+    const tbody = document.querySelector('#reportTable tbody');
     tbody.innerHTML = "";
     Object.values(grouped).forEach(g=>{
-        const mastery=Math.round((g.correct/g.total)*100);
-        const tr=document.createElement('tr');
-        tr.className=mastery>=80?'high': mastery>=50?'medium':'low';
-        tr.innerHTML=`<td>${g.topic}</td><td>${g.subtopic}</td><td>${g.total}</td><td>${g.correct}</td><td>${mastery}%</td>`;
+        const mastery = Math.round((g.correct/g.total)*100);
+        const wrong = g.total - g.correct;
+        const tr = document.createElement('tr');
+        tr.className = mastery>=80?'high': mastery>=50?'medium':'low';
+        tr.innerHTML=`<td>${g.topic}</td><td>${g.subtopic}</td><td>${g.total}</td><td>${g.correct}</td><td>${wrong}</td><td>${mastery}%</td>`;
         tbody.appendChild(tr);
     });
+
+    // Display all previous attempts for all students
+    displayAllPreviousAttempts();
 }
 
-function viewPrevious(){
-    const prev = JSON.parse(localStorage.getItem('attempts')||'[]');
+function displayAllPreviousAttempts(){
+    const allAttempts = JSON.parse(localStorage.getItem('attempts')||'[]');
     const div = document.getElementById('previousAttempts');
-    div.innerHTML = "<h3>Previous Attempts</h3>";
-    prev.forEach((att,i)=>{
-        const p = document.createElement('p');
-        p.textContent = `${i+1}. Student: ${att.student}, Questions answered: ${att.responses.length}`;
-        div.appendChild(p);
+    div.innerHTML = "<h3>All Students Previous Attempts</h3>";
+    if(allAttempts.length===0){ div.innerHTML+="No previous attempts"; return; }
+
+    // Group by student
+    const studentMap = {};
+    allAttempts.forEach(a=>{
+        if(!studentMap[a.student]) studentMap[a.student]=[];
+        studentMap[a.student].push(a);
     });
+
+    for(const student in studentMap){
+        const attempts = studentMap[student];
+        const studentDiv = document.createElement('div');
+        studentDiv.innerHTML = `<h4>${student} (${attempts.length} attempts)</h4>`;
+        attempts.forEach((att,i)=>{
+            const p = document.createElement('p');
+            p.textContent = `Attempt ${i+1}: Total ${att.total}, Correct ${att.correct}, Wrong ${att.wrong}`;
+            studentDiv.appendChild(p);
+        });
+        div.appendChild(studentDiv);
+    }
 }
