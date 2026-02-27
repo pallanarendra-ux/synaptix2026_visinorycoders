@@ -1,0 +1,23 @@
+body {
+    font-family: 'Arial', sans-serif;
+    background: linear-gradient(135deg, #f6d365 0%, #fda085 100%);
+    margin: 0; padding: 0;
+}
+
+.container { width: 90%; max-width: 900px; margin: 40px auto; }
+h1 { text-align: center; color: #333; text-shadow: 1px 1px 2px #fff; }
+.card { background: linear-gradient(to bottom right, #ffffff, #f0f8ff); padding: 25px; border-radius: 15px; box-shadow: 0 15px 30px rgba(0,0,0,0.2); margin-bottom: 30px; }
+input { padding: 12px; width: 250px; margin-right: 10px; border-radius: 8px; border: 1px solid #ccc; outline: none; }
+input:focus { border-color: #4CAF50; box-shadow: 0 0 8px #4CAF50; }
+button { padding: 12px 25px; border: none; border-radius: 10px; background: linear-gradient(to right, #4CAF50, #81C784); color: white; font-weight: bold; cursor: pointer; transition: 0.3s; }
+button:hover { background: linear-gradient(to right, #43A047, #66BB6A); }
+.options button { display: block; width: 100%; margin: 10px 0; font-size: 16px; text-align: left; background: linear-gradient(to right, #2196F3, #64B5F6); }
+.options button:hover { background: linear-gradient(to right, #1976D2, #42A5F5); }
+table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+th, td { padding: 12px; border: 1px solid #ddd; text-align: center; }
+th { background: linear-gradient(to right, #FF5722, #FF8A65); color: white; }
+.high { background: #c8e6c9; }
+.medium { background: #fff9c4; }
+.low { background: #ffcdd2; }
+.progress-bar { width: 100%; background: #ddd; border-radius: 12px; margin-top: 20px; height: 20px; overflow: hidden; }
+#progress { height: 100%; width: 0; background: linear-gradient(to right, #4CAF50, #81C784); border-radius: 12px; transition: width 0.5s ease-in-out; }

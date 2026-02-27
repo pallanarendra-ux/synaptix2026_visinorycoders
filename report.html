@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Professional Adaptive Assessment</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="container">
+    <h1>Adaptive Online Assessment</h1>
+
+    <div id="loginDiv" class="card">
+        <h2>Student Login</h2>
+        <input type="text" id="studentName" placeholder="Enter your name">
+        <button onclick="startTest()">Start Test</button>
+    </div>
+
+    <div id="testDiv" class="card" style="display:none;">
+        <h2 id="questionText"></h2>
+        <div id="options" class="options"></div>
+        <p>Question <span id="currentQuestion">0</span> / <span id="totalQuestions">0</span></p>
+        <div class="progress-bar"><div id="progress"></div></div>
+    </div>
+
+    <div id="reportDiv" class="card" style="display:none;">
+        <h2>Competency Report</h2>
+        <table id="reportTable">
+            <thead>
+                <tr>
+                    <th>Topic</th>
+                    <th>Subtopic</th>
+                    <th>Total</th>
+                    <th>Correct</th>
+                    <th>Mastery %</th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+        <button onclick="viewPrevious()">View Previous Attempts</button>
+        <div id="previousAttempts"></div>
+    </div>
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>
